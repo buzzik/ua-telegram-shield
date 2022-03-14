@@ -1,4 +1,5 @@
 import fs from 'fs/promises';
+import axios from 'axios';
 import logger from '../../modules/logger';
 import Telegram from '../../modules/telegram';
 import { randomize, splitByLines } from '../../lib/utils';
@@ -17,7 +18,7 @@ class ReporterService {
 
   #messagesFilePath: string;
 
-  #peersFilePath: string;
+  #peersGistPath: string;
 
   #inProcess: boolean;
 
@@ -28,7 +29,8 @@ class ReporterService {
     this.#pauseDelay = config.reporterPauseDelay + randomize(config.reporterPauseDelay);
     this.#peerDelay = config.reporterPeerDelay;
     this.#messagesFilePath = './data/report-messages/other.txt';
-    this.#peersFilePath = './data/report-peers/other.txt';
+    // this.#peersFilePath = './data/report-peers/other.txt';
+    this.#peersGistPath = 'https://gist.githubusercontent.com/buzzik/5a32e535f8c8b6f466f92c491829a1e1/raw/859414cff0bf55c289503f80087f669a92c4e7f9/vata';
     this.#inProcess = false;
   }
 
@@ -46,8 +48,8 @@ class ReporterService {
     const messages: Array<string> = splitByLines(messagesText);
     if (!messages.length) throw new Error('No report messages passed');
 
-    const peersText: string = await fs.readFile(this.#peersFilePath, 'utf-8');
-    const peers: Array<string> = splitByLines(peersText);
+    const peersText = await axios.get(this.#peersGistPath);
+    const peers: Array<string> = splitByLines(peersText.data);
     if (!peers.length) throw new Error('No report messages passed');
 
     this.#peers = peers;

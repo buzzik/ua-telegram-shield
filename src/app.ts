@@ -16,7 +16,7 @@ import ReporterService from './services/reporter-service';
       logger.error(`Can't initialize reporter service.  ${error} \n Stoping...`);
       return false;
     }
-    await telegram.sendMessage('me', { message: 'trying to report!' });
+    // await telegram.sendMessage('me', { message: 'trying to report!' });
     return true;
   } catch (error) {
     logger.error(`Can't initialize telegram client.  ${error} \n Stoping...`);
