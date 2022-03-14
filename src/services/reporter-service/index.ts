@@ -4,8 +4,6 @@ import Telegram from '../../modules/telegram';
 import { randomize, splitByLines } from '../../lib/utils';
 import config from '../../modules/config';
 
-const reportPeerName = ['RVvoenkor', 'herson_rus', 'herson_respublika'];
-const reportMessages = ['The channel undermines the integrity of the Ukrainian state. Spreading fake news, misleading people. There are a lot of posts with threats against Ukrainians and Ukrainian soldiers. Block him ASAP!'];
 class ReporterService {
   #telegram: Telegram;
 
@@ -19,31 +17,43 @@ class ReporterService {
 
   #messagesFilePath: string;
 
+  #peersFilePath: string;
+
   #inProcess: boolean;
 
   constructor(telegram: Telegram) {
     this.#telegram = telegram;
-    this.#peers = reportPeerName;
+    this.#peers = [];
     this.#messages = [];
     this.#pauseDelay = config.reporterPauseDelay + randomize(config.reporterPauseDelay);
     this.#peerDelay = config.reporterPeerDelay;
     this.#messagesFilePath = './data/report-messages/other.txt';
+    this.#peersFilePath = './data/report-peers/other.txt';
     this.#inProcess = false;
   }
 
   async run() {
     logger.info('running Reporter Service');
-    this.#messages = await this.#loadMessages();
+    await this.#loadData();
 
     await this.reportAll();
     const reportAll = this.reportAll.bind(this);
     setInterval(reportAll, this.#pauseDelay);
   }
 
-  async #loadMessages(): Promise<string[]> {
-    const text: string = await fs.readFile(this.#messagesFilePath, 'utf-8');
-    const messages: Array<string> = splitByLines(text);
-    return messages;
+  async #loadData(): Promise<boolean> {
+    const messagesText: string = await fs.readFile(this.#messagesFilePath, 'utf-8');
+    const messages: Array<string> = splitByLines(messagesText);
+    if (!messages.length) throw new Error('No report messages passed');
+
+    const peersText: string = await fs.readFile(this.#peersFilePath, 'utf-8');
+    const peers: Array<string> = splitByLines(peersText);
+    if (!peers.length) throw new Error('No report messages passed');
+
+    this.#peers = peers;
+    this.#messages = messages;
+
+    return true;
   }
 
   async delayedReportOne(peer: string) {
@@ -62,8 +72,6 @@ class ReporterService {
 
   // eslint-disable-next-line class-methods-use-this
   async reportOne(peer: string) {
-    // logger.info('reportOne');
-    logger.warn(peer);
     const rnd = randomize(this.#messages.length);
     const message = this.#messages[rnd];
     const result = await this.#telegram.reportPeer(peer, message);

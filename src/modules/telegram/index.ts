@@ -40,17 +40,17 @@ class Telegram {
   }
 
   async reportPeer(peer: string, message: string) {
-    const result = await this.#client.invoke(
-      new Api.account.ReportPeer({
-        peer,
-        reason: new Api.InputReportReasonOther(),
-        message,
-      }),
-    );
-    if (result) {
+    try {
+      await this.#client.invoke(
+        new Api.account.ReportPeer({
+          peer,
+          reason: new Api.InputReportReasonOther(),
+          message,
+        }),
+      );
       logger.info(`Reported peer "${peer}" with message "${message}"`);
-    } else {
-      logger.warn(`Can't report ${peer}`);
+    } catch (error) {
+      logger.error(`Can't report ${peer} : ${error}`);
     }
   }
 }

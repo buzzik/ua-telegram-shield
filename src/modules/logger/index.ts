@@ -29,7 +29,7 @@ const logger = createLogger({
     //
     new transports.Console(),
     // new transports.File({ filename: 'quick-start-error.log', level: 'error' }),
-    // new transports.File({ filename: 'quick-start-combined.log' }),
+    new transports.File({ filename: 'logs/log.log' }),
   ],
 });
 
