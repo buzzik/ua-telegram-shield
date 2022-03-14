@@ -1,8 +1,9 @@
 {
   "name": "gram-reporter",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
-  "main": "index.js",
+  "main": "./dist/app.js",
+  "bin": "./dist/app.js",
   "scripts": {
     "start": "npx tsc && node ./dist/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -24,5 +25,12 @@
     "input": "^1.0.1",
     "telegram": "^2.5.3",
     "winston": "^3.6.0"
+  },
+  "pkg": {
+    "assets": ".env",
+    "targets": [
+      "node16-win-x64"
+    ],
+    "outputPath": "compiled"
   }
 }
