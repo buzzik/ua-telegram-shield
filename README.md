@@ -10,9 +10,9 @@
 6. Авторизуетесь своїм аккаунтом *(або спеціально створеним)*
 7. Потiм сюди [my.telegram.org/apps](https://my.telegram.org/apps)
 ![1647277810](https://user-images.githubusercontent.com/6613424/158256522-7378a6fa-ac27-432f-b1fc-24edc04783ad.png)
-![1647277855](https://user-images.githubusercontent.com/6613424/158256533-0e66b65b-f0e1-4e6d-8822-a9805b571bbc.png)
 9. Заповнюєм, зберегаєм, копiюєм **api_id**  та **api_id**  до файлу **.env**, зберегаєм файл
-10. Запускаєм програму. Слiдкуєм за iнструкцiями в апцi
+![1647277855](https://user-images.githubusercontent.com/6613424/158256533-0e66b65b-f0e1-4e6d-8822-a9805b571bbc.png)
+11. Запускаєм програму. Слiдкуєм за iнструкцiями в апцi
 
 # Як то працює
 На даний момент програма бере статичний список ватних паблiкiв та репортить їх по однiй с причин вказаных в файлi **data/report-messages/other.txt**
