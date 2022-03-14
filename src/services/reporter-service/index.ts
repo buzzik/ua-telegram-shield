@@ -30,7 +30,7 @@ class ReporterService {
     this.#peerDelay = config.reporterPeerDelay;
     this.#messagesFilePath = './data/report-messages/other.txt';
     // this.#peersFilePath = './data/report-peers/other.txt';
-    this.#peersGistPath = 'https://gist.githubusercontent.com/buzzik/5a32e535f8c8b6f466f92c491829a1e1/raw/859414cff0bf55c289503f80087f669a92c4e7f9/vata';
+    this.#peersGistPath = 'https://gist.githubusercontent.com/buzzik/5a32e535f8c8b6f466f92c491829a1e1/raw/';
     this.#inProcess = false;
   }
 
