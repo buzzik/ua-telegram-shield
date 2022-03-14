@@ -48,7 +48,7 @@ class Telegram {
       }),
     );
     if (result) {
-      logger.info(`Reported user "${peer}" with message "${message}"`);
+      logger.info(`Reported peer "${peer}" with message "${message}"`);
     } else {
       logger.warn(`Can't report ${peer}`);
     }
