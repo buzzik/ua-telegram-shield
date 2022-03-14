@@ -2,6 +2,7 @@ import { Api } from 'telegram/tl';
 import { TelegramClient } from 'telegram';
 import { StoreSession } from 'telegram/sessions';
 import logger from '../logger';
+import config from '../config';
 
 const input = require('input');
 
@@ -15,8 +16,8 @@ class Telegram {
   #storeSession: StoreSession;
 
   constructor() {
-    this.#apiId = 11982962;
-    this.#apiHash = '26c616b0c06f37ac7515e612ef30b919';
+    this.#apiId = config.apiId;
+    this.#apiHash = config.apiHash;
     this.#storeSession = new StoreSession('data/session');
     this.#client = new TelegramClient(this.#storeSession, this.#apiId, this.#apiHash, {
       connectionRetries: 5,
@@ -30,6 +31,7 @@ class Telegram {
       phoneCode: async () => input.text('Please enter the code you received: '),
       onError: (err: any) => logger.error(err),
     });
+    logger.info('You should now be connected.');
     return true;
   }
 

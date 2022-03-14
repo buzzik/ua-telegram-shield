@@ -1,12 +1,25 @@
 import Telegram from './modules/telegram';
 import logger from './modules/logger';
+import ReporterService from './services/reporter-service';
 
-const reportPeerName = 'RVvoenkor';
-const reportMessage = 'The channel undermines the integrity of the Ukrainian state. Spreading fake news, misleading people. There are a lot of posts with threats against Ukrainians and Ukrainian soldiers. Block him ASAP!';
 (async () => {
-  const telegram = new Telegram();
-  await telegram.init();
-  logger.info('You should now be connected.');
-  await telegram.sendMessage('me', { message: 'trying to report!' });
-  await telegram.reportPeer(reportPeerName, reportMessage);
+  try {
+    logger.info('initializing telegram client');
+    const telegram = new Telegram();
+    await telegram.init();
+
+    try {
+      logger.info('initializing reporter service');
+      const reporter = new ReporterService(telegram);
+      reporter.run();
+    } catch (error) {
+      logger.error(`Can't initialize reporter service.  ${error} \n Stoping...`);
+      return false;
+    }
+    await telegram.sendMessage('me', { message: 'trying to report!' });
+    return true;
+  } catch (error) {
+    logger.error(`Can't initialize telegram client.  ${error} \n Stoping...`);
+    return false;
+  }
 })();
