@@ -8,14 +8,10 @@ import ReporterService from './services/reporter-service';
     const telegram = new Telegram();
     await telegram.init();
 
-    try {
-      logger.info('initializing reporter service');
-      const reporter = new ReporterService(telegram);
-      reporter.run();
-    } catch (error) {
-      logger.error(`Can't initialize reporter service.  ${error} \n Stoping...`);
-      return false;
-    }
+    logger.info('initializing reporter service');
+    const reporter = new ReporterService(telegram);
+    reporter.run();
+
     // await telegram.sendMessage('me', { message: 'trying to report!' });
     return true;
   } catch (error) {
