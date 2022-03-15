@@ -2,6 +2,8 @@ import Telegram from './modules/telegram';
 import logger from './modules/logger';
 import ReporterService from './services/reporter-service';
 
+const input = require('input');
+
 (async () => {
   try {
     logger.info('initializing telegram client');
@@ -18,4 +20,7 @@ import ReporterService from './services/reporter-service';
     logger.error(`Can't initialize telegram client.  ${error} \n Stoping...`);
     return false;
   }
-})();
+})().then(async () => {
+  await input.text('Press enter to exit');
+  process.exit();
+});
