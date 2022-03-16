@@ -35,8 +35,7 @@ class ReporterService {
   }
 
   async run() {
-    logger.info('running Reporter Service');
-    await this.#loadData();
+    logger.info('Running Reporter Service');
 
     await this.reportAll();
     const reportAll = this.reportAll.bind(this);
@@ -44,6 +43,7 @@ class ReporterService {
   }
 
   async #loadData(): Promise<boolean> {
+    logger.info('Loading data...');
     const messagesText: string = await fs.readFile(this.#messagesFilePath, 'utf-8');
     const messages: Array<string> = splitByLines(messagesText);
     if (!messages.length) throw new Error('No report messages passed');
@@ -61,6 +61,8 @@ class ReporterService {
   async delayedReportOne(peer: string) {
     return new Promise((resolve, reject) => {
       const delay = this.#peerDelay + randomize(this.#peerDelay);
+      logger.info(`Waiting ${delay / 1000} s to report`);
+
       setTimeout(async () => {
         try {
           const result = await this.reportOne(peer);
@@ -81,16 +83,28 @@ class ReporterService {
   }
 
   async reportAll() {
+    await this.#loadData();
+
     if (this.#inProcess) return false;
     this.#inProcess = true;
     // logger.info('reportAll');
 
     // eslint-disable-next-line no-restricted-syntax
     for (const peer of this.#peers) {
-      // eslint-disable-next-line no-await-in-loop
-      await this.delayedReportOne(peer);
+      try {
+        // eslint-disable-next-line no-await-in-loop
+        await this.delayedReportOne(peer);
+      } catch (error) {
+        if (error.message.includes('FloodWaitError')) {
+          logger.error('Flood block, stoping current loop');
+          break;
+        }
+        logger.error(error);
+      }
     }
-    logger.info(`Done reporting. Next report loop will start in ${Math.floor(this.#pauseDelay / 1000 / 60)} minutes`);
+    const nextTime = new Date(new Date().getTime() + this.#pauseDelay);
+
+    logger.info(`Done reporting. Next report loop will start on ${nextTime}`);
 
     this.#inProcess = false;
 
