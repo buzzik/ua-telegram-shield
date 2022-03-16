@@ -95,7 +95,7 @@ class ReporterService {
         // eslint-disable-next-line no-await-in-loop
         await this.delayedReportOne(peer);
       } catch (error) {
-        if (error.message.includes('FloodWaitError')) {
+        if (error.code === 420) {
           logger.error('Flood block, stoping current loop');
           break;
         }
