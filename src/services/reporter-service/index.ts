@@ -3,7 +3,7 @@ import axios from 'axios';
 import logger from '../../modules/logger';
 import Telegram from '../../modules/telegram';
 import { randomize, splitByLines } from '../../lib/utils';
-import config from '../../modules/config';
+import { config } from '../../modules/config';
 
 class ReporterService {
   #telegram: Telegram;
@@ -96,6 +96,7 @@ class ReporterService {
         await this.delayedReportOne(peer);
       } catch (error) {
         if (error.code === 420) {
+          logger.error(error);
           logger.error('Flood block, stoping current loop');
           break;
         }
@@ -104,7 +105,7 @@ class ReporterService {
     }
     const nextTime = new Date(new Date().getTime() + this.#pauseDelay);
 
-    logger.info(`Done reporting. Next report loop will start on ${nextTime}`);
+    logger.info(`Done reporting. Next report loop will start on ${nextTime.toLocaleString()}`);
 
     this.#inProcess = false;
 

@@ -2,7 +2,7 @@ import { Api } from 'telegram/tl';
 import { TelegramClient } from 'telegram';
 import { StoreSession } from 'telegram/sessions';
 import logger from '../logger';
-import config from '../config';
+import { config } from '../config';
 
 const input = require('input');
 

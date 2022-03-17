@@ -1,10 +1,14 @@
 import Telegram from './modules/telegram';
 import logger from './modules/logger';
 import ReporterService from './services/reporter-service';
+import { Config } from './modules/config';
 
 const input = require('input');
 
 (async () => {
+  logger.info('initializing config');
+  await Config.init();
+
   logger.info('initializing telegram client');
   const telegram = new Telegram();
   await telegram.init();

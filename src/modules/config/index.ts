@@ -1,17 +1,31 @@
+import ApiConfig from '../api-config';
 import 'dotenv/config';
 
-interface Config {
+interface ConfigIface {
   apiId: number;
   apiHash: string;
   reporterPauseDelay: number;
   reporterPeerDelay: number;
 }
-
-const config: Config = {
-  apiId: Number(process.env.API_ID),
-  apiHash: String(process.env.API_HASH),
-  reporterPauseDelay: Number(process.env.REPORTER_PAUSE_DELAY),
-  reporterPeerDelay: Number(process.env.REPORTER_PEER_DELAY),
+const config: ConfigIface = {
+  apiId: 0,
+  apiHash: '',
+  reporterPauseDelay: 0,
+  reporterPeerDelay: 0,
 };
+class Config {
+  static async init() {
+    const apiConfig = new ApiConfig();
+    const { apiId, apiHash } = await apiConfig.getApiConfig();
+    config.apiId = Number(apiId);
+    config.apiHash = apiHash;
+    config.reporterPauseDelay = Number(process.env.REPORTER_PAUSE_DELAY);
+    config.reporterPeerDelay = Number(process.env.REPORTER_PEER_DELAY);
 
-export default config;
+    return true;
+  }
+}
+export {
+  Config,
+  config,
+};
